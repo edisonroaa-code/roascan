@@ -1,0 +1,4 @@
+# Preserve bundled resource bytes so published SHA-256 checksums remain valid.
+roascan/models/* -text
+*.onnx binary
+*.dll binary

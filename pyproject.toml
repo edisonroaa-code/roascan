@@ -1,0 +1,66 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "roascan"
+version = "2.0.0"
+description = "RoaScan: Ultra-lightweight C++17 & ONNX multi-page OCR engine and MCP Server for AI Agents (Scanned PDF/TIFF -> Restored Searchable PDF & Structured Markdown)."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE", "THIRD_PARTY_LICENSES.txt"]
+authors = [
+    { name = "Roa" }
+]
+urls = { Homepage = "https://github.com/edisonroaa-code/roascan", Repository = "https://github.com/edisonroaa-code/roascan", Issues = "https://github.com/edisonroaa-code/roascan/issues" }
+keywords = [
+    "ocr",
+    "roascan",
+    "mcp",
+    "model-context-protocol",
+    "ai-agent",
+    "pdf-to-markdown",
+    "searchable-pdf",
+    "document-restoration",
+    "onnxruntime",
+    "cpp17"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Operating System :: Microsoft :: Windows :: Windows 10",
+    "Operating System :: Microsoft :: Windows :: Windows 11",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Programming Language :: C++",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Image Recognition",
+    "Topic :: Text Processing :: Markup :: Markdown",
+]
+dependencies = [
+    "numpy>=1.22.0",
+    "Pillow>=9.5.0",
+    "onnxruntime>=1.15.0",
+    "PyMuPDF>=1.22.0",
+]
+
+[project.optional-dependencies]
+desktop = [
+    "pystray>=0.19.0",
+    "pynput>=1.7.0",
+    "platformdirs>=3.0.0",
+]
+
+[project.scripts]
+roascan = "roascan.__main__:main"
+roascan-mcp = "roascan.mcp_server:run_mcp_server"
+roascan-tray = "roascan.desktop.tray_app:main"
+roascan-config = "roascan.desktop.config_cli:main"
+
+[tool.setuptools]
+packages = ["roascan", "roascan.models", "roascan.desktop"]
+
+[tool.setuptools.package-data]
+roascan = ["*.dll", "*.so", "*.dylib", "models/*.onnx", "models/*.txt", "models/*.dic"]

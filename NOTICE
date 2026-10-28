@@ -1,0 +1,76 @@
+RoaScan (roascan)
+Copyright 2026 Roa (RoaScan Project)
+
+This product includes software developed for the RoaScan project (https://github.com/edisonroaa-code/roascan),
+licensed under the Apache License, Version 2.0 (see `LICENSE`).
+
+================================================================================
+THIRD-PARTY MODELS, LEXICONS, AND RUNTIME DEPENDENCIES PROVENANCE & LICENSES
+================================================================================
+
+1. Neural OCR Recognition Weights & Character Vocabularies (Bundled in `roascan/models/`):
+   - License: Apache License 2.0 (Permissive — PaddlePaddle Contributors)
+   - Upstream Repository: https://github.com/PaddlePaddle/PaddleOCR
+   - Exact Bundled Artifacts, Sizes & SHA-256 Checksums:
+     * `roascan/models/roascan_rec_latin_v5.onnx`
+       - Size: 7,904,513 bytes
+       - SHA-256: `b20bd37c168a570f583afbc8cd7925603890efbcdc000a59e22c269d160b5f5a`
+       - Upstream Model Origin: PaddleOCR Multilingual Latin SVTR/CRNN recognition inference graph
+         (`latin_PP-OCRv3_rec_infer` / PP-OCR Latin recognition architecture).
+     * `roascan/models/roascan_rec_en.onnx`
+       - Size: 8,967,018 bytes
+       - SHA-256: `ef7abd8bd3629ae57ea2c28b425c1bd258a871b93fd2fe7c433946ade9b5d9ea`
+       - Upstream Model Origin: PaddleOCR English SVTR/CRNN recognition inference graph
+         (`en_PP-OCRv4_rec_infer`).
+     * `roascan/models/ppocrv5_latin_dict.txt`
+       - Size: 1,634 bytes
+       - SHA-256: `3c0a8a79b612653c25f765271714f71281e4e955962c153e272b7b8c1d2b13ff`
+       - Upstream Origin: `ppocr/utils/dict/latin_dict.txt` (PaddleOCR Apache-2.0)
+     * `roascan/models/en_dict.txt`
+       - Size: 190 bytes
+       - SHA-256: `5662df9d2d03f0e8ca0d3b0649d6acbab904b6a14b3d3521463c71c37c668ce3`
+       - Upstream Origin: `ppocr/utils/en_dict.txt` (PaddleOCR Apache-2.0)
+   - Reproducible Export Procedure (Paddle Inference -> ONNX Runtime):
+     ```bash
+     pip install paddle2onnx>=1.0.5 onnx>=1.14.0
+     paddle2onnx \
+       --model_dir ./inference_model_dir \
+       --model_filename inference.pdmodel \
+       --params_filename inference.pdiparams \
+       --save_file roascan_rec_model.onnx \
+       --opset_version 11 \
+       --enable_onnx_checker True
+     ```
+
+--------------------------------------------------------------------------------
+
+2. Spanish Orthographic Lexicon (Bundled in `roascan/models/es_ES.dic`):
+   - File: `roascan/models/es_ES.dic`
+   - Size: 715,989 bytes
+   - SHA-256: `6975dddec3d5d2c676069537bc67b4b5f786c65c5d4cf6703a82acf779ac9ec1`
+   - Upstream Source: RLA-ES (Recursos Lingüísticos Abiertos del Español) v2.8
+     (https://github.com/sbosio/rla-es / https://github.com/sbosio/rla-es/blob/master/LICENSE.md)
+   - Original Authors: Santiago Bosio and RLA-ES contributors.
+   - Upstream License Options: Tri-licensed under GPLv3+ / LGPLv3+ / MPL-1.1+.
+   - Elected License for Redistribution in RoaScan: **Mozilla Public License Version 1.1 (MPL-1.1)**.
+     `roascan/models/es_ES.dic` is distributed as an unmodified standalone plain-text dictionary
+     file under the terms of the Mozilla Public License Version 1.1 (see `THIRD_PARTY_LICENSES.txt`).
+     Under MPL-1.1 Section 3.7 ("Larger Works"), the unmodified dictionary file is combined with
+     RoaScan's Apache-2.0 code as a separate data file read at runtime. Source availability for
+     `es_ES.dic` is satisfied both by its direct inclusion in plain text within `roascan/models/es_ES.dic`
+     and at https://github.com/sbosio/rla-es.
+
+--------------------------------------------------------------------------------
+
+3. External Python Runtime Dependencies (Not Bundled in Wheel/sdist; Installed via PyPI):
+   - `onnxruntime` — MIT License (Microsoft Corporation)
+   - `numpy` — BSD-3-Clause License (NumPy Developers)
+   - `Pillow` — MIT-CMU Permissive License (Jeffrey A. Clark & contributors)
+   - `PyMuPDF` (`fitz`) — GNU Affero General Public License v3.0 (AGPL-3.0) or Commercial
+     License from Artifex Software, Inc. (https://pymupdf.readthedocs.io/en/latest/about.html).
+     IMPORTANT COMPLIANCE NOTICE:
+     RoaScan does NOT bundle, copy, or redistribute `PyMuPDF` inside its source repository,
+     `sdist`, or `wheel`. RoaScan's own C++17 and Python code is licensed under Apache-2.0.
+     However, when `PyMuPDF` is installed from PyPI and imported at runtime for PDF ingestion
+     or searchable PDF generation, the resulting runtime environment is subject to `PyMuPDF`'s
+     AGPL-3.0 license terms unless the user holds a commercial license from Artifex Software, Inc.

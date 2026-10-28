@@ -1,0 +1,21 @@
+include LICENSE
+include NOTICE
+include THIRD_PARTY_LICENSES.txt
+include README.md
+include SKILL.md
+include mcp_config.json
+include ROASCAN_ROADMAP_2026.md
+include pyproject.toml
+include setup.py
+
+recursive-include roascan *.py *.dll *.so *.dylib
+recursive-include roascan/models *.onnx *.txt *.dic
+recursive-include roascan-native CMakeLists.txt *.md *.cpp *.hpp *.h
+recursive-include dotnet *.cs
+recursive-include examples *.py
+recursive-include tests *.py *.png
+
+prune roascan-native/build
+prune build
+prune dist
+global-exclude __pycache__ *.py[cod] *.tmp *.log

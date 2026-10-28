@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "roascan": {
+      "command": "roascan-mcp",
+      "args": [],
+      "env": {
+        "PYTHONIOENCODING": "utf-8"
+      }
+    }
+  }
+}

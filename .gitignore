@@ -1,0 +1,38 @@
+# RoaScan (roascan) — Open Source C++17 & ONNX OCR Engine
+
+# Build directories & artifacts
+build/
+roascan-native/build/
+dist/
+*.egg-info/
+*.log
+*.tmp
+temp/
+scratch/
+
+# Native binaries (except bundled roascan_core.dll)
+*.dll
+!roascan/roascan_core.dll
+*.exe
+*.so
+*.dylib
+*.pyd
+
+# Dictionary/Lexicon rules (allow Open Source Hunspell dictionaries in models/)
+*.dic
+!roascan/models/*.dic
+
+# Python compiled & virtual environments
+__pycache__/
+.pytest_cache/
+*.py[cod]
+.env
+.venv/
+env/
+venv/
+
+# .NET artifacts
+bin/
+obj/
+*.user
+*.suo

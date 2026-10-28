@@ -1,0 +1,59 @@
+name: RoaScan CI & Multi-Platform Wheel Build
+
+on:
+  push:
+    branches: [ main, master ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build C++17 Native Core (roascan-native)
+        shell: bash
+        run: |
+          cmake -S roascan-native -B roascan-native/build -DCMAKE_BUILD_TYPE=Release
+          cmake --build roascan-native/build --config Release
+          if [ -f "roascan-native/build/Release/roascan_core.dll" ]; then
+            cp roascan-native/build/Release/roascan_core.dll roascan/
+          elif [ -f "roascan-native/build/libroascan_core.so" ]; then
+            cp roascan-native/build/libroascan_core.so roascan/
+          elif [ -f "roascan-native/build/libroascan_core.dylib" ]; then
+            cp roascan-native/build/libroascan_core.dylib roascan/
+          fi
+
+      - name: Install Python dependencies & package
+        run: |
+          python -m pip install --upgrade pip build wheel pytest
+          python -m pip install -e .
+
+      - name: Run functional OCR & MCP test suite
+        run: |
+          python -m pytest tests/test_functional_ocr.py tests/test_result_panel.py tests/test_result_panel_runtime.py -q
+          roascan --version
+          roascan tests/test_document.png --json
+
+      - name: Build distributable wheel
+        run: |
+          python -m build --wheel --outdir dist
+
+      - name: Upload wheel artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: roascan-wheel-${{ matrix.os }}
+          path: dist/*.whl
