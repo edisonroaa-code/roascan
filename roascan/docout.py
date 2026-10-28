@@ -278,7 +278,7 @@ class RoaScanDocumentWriter:
 
             if resolved_fmt == "json":
                 payload = engine.to_dict() if (engine and hasattr(engine, "to_dict")) else {
-                    "version": "2.0.0",
+                    "version": "2.0.1",
                     "page_count": getattr(engine, "page_count", 0) if engine else 0,
                     "text": engine.get_text() if engine else "",
                     "markdown": engine.to_markdown() if (engine and hasattr(engine, "to_markdown")) else "",

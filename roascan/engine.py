@@ -725,7 +725,7 @@ class RoaScanEngine:
             })
         return {
             "schema_version": "2.0",
-            "engine": "RoaScan v2.0.0",
+            "engine": "RoaScan v2.0.1",
             "language": self.language,
             "page_count": len(self._pages),
             "word_count": len(self._words),
@@ -758,7 +758,7 @@ class RoaScanEngine:
 
         return {
             "status": "ok" if (drv.is_available and rec.is_available) else "error",
-            "engine_version": "2.0.0",
+            "engine_version": "2.0.1",
             "native_core": {
                 "available": drv.is_available,
                 "version": drv.version(),

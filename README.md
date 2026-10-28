@@ -36,7 +36,7 @@ Designed as an **Agent-First local OCR tool** (Antigravity, Claude Code, Claude 
 
 ### Platform Verification Status
 - **Windows x64 (`win_amd64`)**: Precompiled `roascan_core.dll` bundled in wheel (`py3-none-win_amd64`); verified end-to-end. Requires standard Microsoft Visual C++ Redistributable (`MSVCP140.dll` / `VCRUNTIME140.dll`).
-- **Linux & macOS (Experimental Source Build; runtime not yet verified)**: `sdist` includes full C++17 sources and `CMakeLists.txt` (`roascan-native/`). Building a wheel from source (`pip install .` or `python -m build --wheel`) automatically invokes `cmake` via `setup.py` to compile `libroascan_core.so` / `libroascan_core.dylib` (requires `cmake >= 3.16` and a C++17 compiler).
+- **Linux & macOS (Experimental Source Build)**: Native compilation, functional OCR, MCP, and wheel builds pass GitHub Actions on both platforms. Desktop integration remains unverified there. `sdist` includes full C++17 sources and `CMakeLists.txt` (`roascan-native/`). Building a wheel from source (`pip install .` or `python -m build --wheel`) automatically invokes `cmake` via `setup.py` to compile `libroascan_core.so` / `libroascan_core.dylib` (requires `cmake >= 3.16` and a C++17 compiler).
 
 ---
 
@@ -66,10 +66,10 @@ Designed as an **Agent-First local OCR tool** (Antigravity, Claude Code, Claude 
 
 ```bash
 # 1. Core library + CLI + MCP Server:
-pip install .
+pip install roascan
 
 # 2. With desktop tray companion & global shortcut extra:
-pip install ".[desktop]"
+pip install "roascan[desktop]"
 
 # Verify installation, native C++ core, and ONNX models:
 roascan --doctor
