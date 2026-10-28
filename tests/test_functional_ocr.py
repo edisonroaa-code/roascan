@@ -41,17 +41,10 @@ from roascan.mcp_server import handle_jsonrpc_message
 
 
 def _load_fonts():
-    for candidate in ("arial.ttf", "DejaVuSans.ttf", "LiberationSans-Regular.ttf"):
-        try:
-            return ImageFont.truetype(candidate, 46), ImageFont.truetype(candidate, 30)
-        except Exception:
-            continue
-    # Keep the same readable scale on hosts without Arial/DejaVu/Liberation
-    # instead of silently generating eight-pixel glyphs (notably macOS CI).
-    try:
-        return ImageFont.load_default(size=46), ImageFont.load_default(size=30)
-    except TypeError as exc:
-        raise RuntimeError("OCR fixtures require a TrueType system font or Pillow >= 10.1.") from exc
+    # Render identical documents on every host; system fonts and Pillow's
+    # fallback change glyph shapes and therefore the OCR input itself.
+    font_path = os.path.join(current_dir, "assets", "DejaVuSans.ttf")
+    return ImageFont.truetype(font_path, 46), ImageFont.truetype(font_path, 30)
 
 
 def create_test_image(path: str, ink_gray: int = 0) -> str:
@@ -111,7 +104,7 @@ def _sha256(path: str) -> str:
     return h.hexdigest()
 
 
-def test_missing_system_fonts_still_render_readable_fixtures(monkeypatch):
+def test_missing_system_fonts_keep_spanish_ocr_readable(monkeypatch):
     original_truetype = ImageFont.truetype
 
     def without_system_fonts(font, *args, **kwargs):
@@ -123,6 +116,9 @@ def test_missing_system_fonts_still_render_readable_fixtures(monkeypatch):
     large, small = _load_fonts()
     assert large.getbbox("ROASCAN")[3] - large.getbbox("ROASCAN")[1] >= 30
     assert small.getbbox("Peña")[3] - small.getbbox("Peña")[1] >= 20
+    # Glyph height alone missed the macOS regression: the fallback font made
+    # the recognizer read the surname as Peßa despite a readable text size.
+    test_spanish_invoice_diacritics_ruc_and_boxed_table()
 
 
 # ---------------------------------------------------------------------------

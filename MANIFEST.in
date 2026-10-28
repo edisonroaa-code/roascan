@@ -14,6 +14,7 @@ recursive-include roascan-native CMakeLists.txt *.md *.cpp *.hpp *.h
 recursive-include dotnet *.cs
 recursive-include examples *.py
 recursive-include tests *.py *.png
+recursive-include tests/assets *.ttf *.txt *.md
 
 prune roascan-native/build
 prune build
