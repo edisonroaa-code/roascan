@@ -46,7 +46,12 @@ def _load_fonts():
             return ImageFont.truetype(candidate, 46), ImageFont.truetype(candidate, 30)
         except Exception:
             continue
-    return ImageFont.load_default(), ImageFont.load_default()
+    # Keep the same readable scale on hosts without Arial/DejaVu/Liberation
+    # instead of silently generating eight-pixel glyphs (notably macOS CI).
+    try:
+        return ImageFont.load_default(size=46), ImageFont.load_default(size=30)
+    except TypeError as exc:
+        raise RuntimeError("OCR fixtures require a TrueType system font or Pillow >= 10.1.") from exc
 
 
 def create_test_image(path: str, ink_gray: int = 0) -> str:
@@ -104,6 +109,20 @@ def _sha256(path: str) -> str:
     with open(path, "rb") as f:
         h.update(f.read())
     return h.hexdigest()
+
+
+def test_missing_system_fonts_still_render_readable_fixtures(monkeypatch):
+    original_truetype = ImageFont.truetype
+
+    def without_system_fonts(font, *args, **kwargs):
+        if isinstance(font, str) and font in ("arial.ttf", "DejaVuSans.ttf", "LiberationSans-Regular.ttf"):
+            raise OSError("Simulated host without system fonts")
+        return original_truetype(font, *args, **kwargs)
+
+    monkeypatch.setattr(ImageFont, "truetype", without_system_fonts)
+    large, small = _load_fonts()
+    assert large.getbbox("ROASCAN")[3] - large.getbbox("ROASCAN")[1] >= 30
+    assert small.getbbox("Peña")[3] - small.getbbox("Peña")[1] >= 20
 
 
 # ---------------------------------------------------------------------------
